@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TestAndroidClear.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="MyGray">#D2D2D2</Color>
+            <Style TargetType="ScrollView">
+                <Setter Property="BackgroundColor" Value="{StaticResource MyGray}"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

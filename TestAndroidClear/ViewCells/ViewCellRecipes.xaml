@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TestAndroidClear.ViewCells.ViewCellRecipes">
+  <ViewCell.View>
+        <Frame CornerRadius="18" Padding="9,8">
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- image -->
+                <Frame Grid.RowSpan="10" WidthRequest="107"
+               CornerRadius="10" Padding="0" VerticalOptions="Start">
+                    <Image BackgroundColor="red" HeightRequest="102"
+                   Source=""/>
+                </Frame>
+
+                <!-- text -->
+                <FlexLayout Grid.Column="1" Direction="Column" HeightRequest="102">
+                    <Label Grid.Column="1" TextColor="Black" 
+                   FontSize="Small" FontAttributes="Bold"
+                   Text="Recipe name maby his to large"/>
+                    <Label Grid.Column="1" Grid.Row="1" TextColor="Black" 
+                   FontSize="Small" FontAttributes="Bold"
+                   Text="Product"/>
+                    <Label Grid.Column="1" Grid.Row="2"
+                   FontSize="14" Text="Site"/>
+                    <Label Grid.Column="1" Grid.Row="3" TextColor="Black" 
+                   FontSize="Small" FontAttributes="Bold"
+                   Text="Charakter"/>
+                </FlexLayout>
+
+                <!-- button -->
+                <ImageButton BackgroundColor="blue"
+                     Grid.Column="2" Grid.RowSpan="10" VerticalOptions="Start" HeightRequest="20"/>
+            </Grid>
+        </Frame>
+    </ViewCell.View>
+</ViewCell>

@@ -5,8 +5,8 @@
              Title="Продукты"
              x:Class="TestAndroidClear.Views.MainPage">
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout x:Name="stack" Margin="0" Padding="20,10"/>
-        </ScrollView>
+            <ScrollView x:Name="ScrlV">
+                <StackLayout x:Name="stack" Margin="0" Padding="20,10"/>
+            </ScrollView>
     </ContentPage.Content>
 </ContentPage>

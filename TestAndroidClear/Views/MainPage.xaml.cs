@@ -4,9 +4,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TestAndroidClear.Tables;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
+using Xamarin.Forms.PlatformConfiguration;
 using Xamarin.Forms.PlatformConfiguration.WindowsSpecific;
 using Xamarin.Forms.Xaml;
 
@@ -84,24 +86,51 @@ namespace TestAndroidClear.Views
 
                     frame = new Frame()
                     {
+                         
                         HeightRequest = 140,
                         CornerRadius = 16,
-                        Content = grid
+                        Margin = new Thickness(0, 5, 0, 5),
                     };
                     stack.Children.Add(frame);
-
+                    var gridLayout = new GridItemsLayout(orientation: ItemsLayoutOrientation.Vertical);
+                    gridLayout.Span = 2;
                     collectionView = new CollectionView();
                     collectionView.ItemsSource = products;
+                    collectionView.ItemsLayout = gridLayout;
                     collectionView.ItemTemplate = new DataTemplate(() =>
                     {
                         Button PRButton = new Button();
-                        
+
                         PRButton.SetBinding(Button.TextProperty, "IngName");
+                        PRButton.FontSize = 12;
 
                         return PRButton;
                     });
 
-                    frame.Content = collectionView;
+                    string header = Convert.ToString(categories[i].CategoryTBName);
+
+                    var headBTN = new Button
+                    {
+                        Text = header,
+                        TextColor = Color.Black,
+                        FontAttributes = FontAttributes.Bold,
+                        FontSize = 16,
+                        BackgroundColor = Color.White,
+                    };
+                    headBTN.Clicked += HeadBTNClick;
+
+                    StackLayout q1 = new StackLayout()
+                    {
+                        Children =
+                        {
+                            headBTN,
+                            collectionView
+                        }
+                    };
+
+
+                    frame.Content = q1;
+
                 }
             }
             catch (Exception ex)
@@ -112,7 +141,7 @@ namespace TestAndroidClear.Views
         }
 
 
-        private void TBbutton_click (object sender, EventArgs e)
+        private void HeadBTNClick (object sender, EventArgs e)
         {
             if (frame.Height < 100)
             {
@@ -123,45 +152,18 @@ namespace TestAndroidClear.Views
                 frame.HeightRequest = 140;
             }
         }
+
+        // !
+        private int CalculateSpanCount()
+        {
+            double screenWidth = Xamarin.Forms.Application.Current.MainPage.Width;
+            double itemWidth = 100; // Ширина элемента (примерное значение)
+            int minSpan = 1; // Минимальное количество элементов в строке
+
+            // Вычисление количества элементов в строке (можно настроить логику по желанию)
+            int spanCount = (int)(screenWidth / itemWidth); // Пример: один элемент в строке за 100 единиц ширины
+
+            return Math.Max(spanCount, minSpan); // Возвращаем вычисленное значение, но не менее минимального
+        }
     }
 }
-
-
-/* 
- * TButton = new Button()
-                    {
-                        CornerRadius = 10,
-                        Text = categories[i].CategoryTBName,
-                        FontAttributes = FontAttributes.Bold,
-                        FontSize = 16,
-                    };
-
-                    TButton.Clicked += TBbutton_click;
-
-                    Grid grid = new Grid()
-                    {
-                        RowDefinitions =
-                        {
-                            new RowDefinition(),
-                            new RowDefinition(),
-                        },
-                    };
-
-                    
-
-                    collectionView.ItemsSource = products;
- * 
- * 
- * 
- * for (int i = 0; i < categories.Count; i++)
-    {
-        Label label = new Label()
-        {
-            ClassId = $"Label{i + 1}",
-            Text = categories[i].CategoryTBNameRu,
-            FontSize = 12,
-            TextColor = Color.Black
-        };
-        Product.Children.Add(label);
-    }
-*/

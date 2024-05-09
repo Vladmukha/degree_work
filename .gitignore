@@ -361,5 +361,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/TestAndroidClear/DatabaseConnection.cs
-/TestAndroidClear/DatabaseConnection.cs

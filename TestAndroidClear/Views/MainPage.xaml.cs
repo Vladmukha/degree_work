@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using TestAndroidClear.Tables;
+using TestAndroidClear.Models;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
-using Xamarin.Forms.PlatformConfiguration;
-using Xamarin.Forms.PlatformConfiguration.WindowsSpecific;
 using Xamarin.Forms.Xaml;
 
 namespace TestAndroidClear.Views
@@ -18,12 +14,7 @@ namespace TestAndroidClear.Views
     public partial class MainPage : ContentPage
     {
         SqlConnection sqlConnection;
-        Button TButton;
         Frame frame;
-        FlexLayout flexLayout;
-        StackLayout stackLayout;
-        Button prbutton;
-        Grid grid;
         CollectionView collectionView;
         Button headBTN;
         
@@ -31,19 +22,12 @@ namespace TestAndroidClear.Views
         {
             InitializeComponent();
 
-            // Параметры подключения к базе данных SQL Server
-            string srvrdbname = "Recipes";
-            string srvrname = "192.168.2.30";
-            string srvrusername = "vmukha";
-            string srvrpassword = "123456";
-
-            // Формирование строки подключения к SQL Server
-            string sqlconn = $"Data Source={srvrname};Initial Catalog={srvrdbname};User Id={srvrusername};Password={srvrpassword}";
-
-            // Создание объекта SqlConnection для установления соединения с базой данных
-            sqlConnection = new SqlConnection(sqlconn);
-
-            // Открытие соединения с базой данных
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            if (dbConnection.OpenConnection())
+{
+                // Получение объекта SqlConnection для выполнения запросов
+                sqlConnection = dbConnection.GetConnection();
+            }
             sqlConnection.Open();
 
             // Создание кнопки "Continue" и добавление ее в StackLayout
@@ -130,6 +114,8 @@ namespace TestAndroidClear.Views
 
                         // Привязываем текст кнопки к свойству IngName объекта Products
                         PRButton.SetBinding(Button.TextProperty, "IngName");
+                        PRButton.SetBinding(Button.ClassIdProperty, "IngName");
+                        PRButton.Clicked += PRButtonClicked;
                         PRButton.FontSize = 12;
 
                         return PRButton;
@@ -174,6 +160,21 @@ namespace TestAndroidClear.Views
             }
         }
 
+        private async void PRButtonClicked(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+
+            // Получаем ClassId кнопки, чтобы идентифицировать соответствующий Frame
+            var btnclass = button.ClassId;
+            if (btnclass == button.ClassId && button.BackgroundColor == Color.Accent)
+            {
+                button.BackgroundColor = Color.Cyan;
+            }
+            else if (btnclass == button.ClassId && button.BackgroundColor != Color.Accent)
+            {
+                button.BackgroundColor = Color.Accent;
+            }
+        }
 
         private async void HeadBTNClick(object sender, EventArgs e)
         {
@@ -187,52 +188,16 @@ namespace TestAndroidClear.Views
             var fr = stack.Children.FirstOrDefault(child => child is Frame && ((Frame)child).ClassId == btnclass) as Frame;
 
             // Проверяем высоту Frame и выполняем соответствующее действие
-            if (fr.Height > 181)
+            if (fr.HeightRequest > 181)
             {
                 // Если высота больше 181, вызываем метод сворачивания Frame
-                await CollapseFrame(fr);
+                fr.HeightRequest = 600;
             }
-            else if (fr.Height <= 180)
+            else if (fr.HeightRequest <= 180)
             {
                 // Если высота меньше или равна 180, вызываем метод разворачивания Frame
-                await ExpandFrame(fr);
+                fr.HeightRequest = 180;
             }
-        }
-        public async Task ExpandFrame(Frame frame, int durationMilliseconds = 250, uint animationLength = 16)
-        {
-            // Определяем начальную и конечную высоту
-            double startingHeight = frame.Height;
-            double targetHeight = 600;
-
-            // Устанавливаем начальную высоту перед началом анимации
-            frame.HeightRequest = startingHeight;
-
-            // Анимация разворачивания
-            while (frame.HeightRequest < targetHeight)
-            {
-                frame.HeightRequest += animationLength;
-                await Task.Delay(durationMilliseconds / (int)((targetHeight - startingHeight) / animationLength));
-            }
-
-            // Убеждаемся, что окончательная высота равна целевой высоте
-            frame.HeightRequest = targetHeight;
-        }
-
-        public async Task CollapseFrame(Frame frame, int durationMilliseconds = 250, uint animationLength = 16)
-        {
-            // Определяем начальную и конечную высоту
-            double startingHeight = frame.Height;
-            double targetHeight = 180;
-
-            // Анимация сворачивания
-            while (frame.HeightRequest > targetHeight)
-            {
-                frame.HeightRequest -= animationLength;
-                await Task.Delay(durationMilliseconds / (int)((startingHeight - targetHeight) / animationLength));
-            }
-
-            // Убеждаемся, что окончательная высота равна целевой высоте
-            frame.HeightRequest = targetHeight;
         }
     }
 }

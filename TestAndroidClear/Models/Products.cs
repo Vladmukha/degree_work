@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestAndroidClear.Tables
+namespace TestAndroidClear.Models
 {
     internal class Products
     {

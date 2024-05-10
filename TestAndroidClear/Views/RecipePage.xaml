@@ -5,9 +5,7 @@
              x:Class="TestAndroidClear.Views.RecipePage">
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
-                
-            </StackLayout>
+            <StackLayout x:Name="Re" Margin="0" Padding="20,10"/>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

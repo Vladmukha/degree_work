@@ -23,6 +23,7 @@
     <TabBar>
         <ShellContent Title="1" Route="Страница продуктов" ContentTemplate="{DataTemplate local:MainPage}"/>
         <ShellContent Title="2" Route="Страница рецептов" ContentTemplate="{DataTemplate local:RecipePage}"/>
-        <ShellContent Title="3" Route="Страница пользователей" ContentTemplate="{DataTemplate local:UserPage}"/>
+        <ShellContent Title="3" Route="Страница пользователей" ContentTemplate="{DataTemplate local:RLikePage}"/>
+        <ShellContent Title="4" Route="Страница пользователей" ContentTemplate="{DataTemplate local:UserPage}"/>
     </TabBar>
 </Shell>

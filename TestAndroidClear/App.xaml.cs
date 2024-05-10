@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using TestAndroidClear.Services;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
 
 namespace TestAndroidClear
 {
@@ -11,8 +7,6 @@ namespace TestAndroidClear
         public App()
         {
             InitializeComponent();
-
-            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 

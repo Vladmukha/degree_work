@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using TestAndroidClear.Models;
+using TestAndroidClear.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -38,7 +39,7 @@ namespace TestAndroidClear.Views
                 sqlConnection = dbConnection.GetConnection();
             }
             sqlConnection.Open();
-
+            /*
             // Создание кнопки "Continue" и добавление ее в StackLayout
             Button button = new Button()
             {
@@ -47,16 +48,24 @@ namespace TestAndroidClear.Views
             Re.Children.Add(button);
 
             // Установка обработчика события Clicked для кнопки
-            button.Clicked += Button_clickAsync;
+            button.Clicked += Button_clickAsync;*/
         }
 
-        private async void Button_clickAsync(object sender, EventArgs e)
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            LoadRecipes();
+        }
+
+        //private async void Button_clickAsync(object sender, EventArgs e)
+        private async void LoadRecipes()
         {
             try
             {
+                Re.Children.Clear();
                 // Создаем список категорий
                 List<Recipes> recipe = new List<Recipes>();
-                List<string> product = new List<string> { "Сахар", "Молоко", "Разрыхлитель" };
+                List<string> product = GlobalProductList.Products;
                 // Запрос к базе данных для получения списка категорий
                 string querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image " +
                     "FROM Recipe r where ";

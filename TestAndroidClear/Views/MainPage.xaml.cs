@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using TestAndroidClear.Models;
+using TestAndroidClear.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -165,13 +166,15 @@ namespace TestAndroidClear.Views
             var button = (Button)sender;
 
             // Получаем ClassId кнопки, чтобы идентифицировать соответствующий Frame
-            var btnclass = button.ClassId;
-            if (btnclass == button.ClassId && button.BackgroundColor == Color.Accent)
+            var productName = button.Text;
+            if (GlobalProductList.Products.Contains(productName))
             {
+                GlobalProductList.Products.Remove(productName);
                 button.BackgroundColor = Color.Cyan;
             }
-            else if (btnclass == button.ClassId && button.BackgroundColor != Color.Accent)
+            else
             {
+                GlobalProductList.Products.Add(productName);
                 button.BackgroundColor = Color.Accent;
             }
         }

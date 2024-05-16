@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TestAndroidClear/DatabaseConnection.cs
 /TestAndroidClear/DatabaseConnection.cs
+/TestAndroidClear/ViewModels

@@ -37,6 +37,5 @@
 
   <ItemGroup>
     <Folder Include="Icons\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>

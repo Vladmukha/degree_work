@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using TestAndroidClear.Models;
-using TestAndroidClear.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -31,6 +30,9 @@ namespace TestAndroidClear.Views
             }
             sqlConnection.Open();
 
+            Create_elements();
+
+            /*
             // Создание кнопки "Continue" и добавление ее в StackLayout
             Button button = new Button()
             {
@@ -40,9 +42,11 @@ namespace TestAndroidClear.Views
 
             // Установка обработчика события Clicked для кнопки
             button.Clicked += Button_clickAsync;
+            */
         }
 
-        private async void Button_clickAsync (object sender, EventArgs e)
+        //private async void Button_clickAsync (object sender, EventArgs e)
+        private async void Create_elements()
         {
             try
             {
@@ -118,6 +122,19 @@ namespace TestAndroidClear.Views
                         PRButton.SetBinding(Button.ClassIdProperty, "IngName");
                         PRButton.Clicked += PRButtonClicked;
                         PRButton.FontSize = 12;
+
+                        // Устанавливаем начальный цвет кнопки в зависимости от её состояния в глобальном списке
+                        PRButton.BindingContextChanged += (s, e) =>
+                        {
+                            if (PRButton.BindingContext is Products product && GlobalButtonState.ButtonStates.ContainsKey(product.IngName))
+                            {
+                                PRButton.BackgroundColor = GlobalButtonState.ButtonStates[product.IngName] ? Color.Accent : Color.Cyan;
+                            }
+                            else
+                            {
+                                PRButton.BackgroundColor = Color.Cyan;
+                            }
+                        };
 
                         return PRButton;
                     });

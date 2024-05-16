@@ -2,12 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TestAndroidClear.Models"
-             xmlns:vm="clr-namespace:TestAndroidClear.ViewModels"
              Title="Продукты"
              x:Class="TestAndroidClear.Views.MainPage">
-    <ContentPage.BindingContext>
-        <vm:MainPageViewModel/>
-    </ContentPage.BindingContext>
     <ContentPage.Content>
             <ScrollView x:Name="ScrlV">
                 <StackLayout x:Name="stack" Margin="0" Padding="20,10"/>

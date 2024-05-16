@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using TestAndroidClear.Models;
-using TestAndroidClear.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

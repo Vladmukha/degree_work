@@ -18,40 +18,30 @@ namespace TestAndroidClear.Views
         Frame frame;
         CollectionView collectionView;
         Button headBTN;
-        
+
         public MainPage()
         {
             InitializeComponent();
 
             DatabaseConnection dbConnection = new DatabaseConnection();
             if (dbConnection.OpenConnection())
-{
+            {
                 // Получение объекта SqlConnection для выполнения запросов
                 sqlConnection = dbConnection.GetConnection();
             }
             sqlConnection.Open();
 
             OnAppearing();
-
-            /*
-            // Создание кнопки "Continue" и добавление ее в StackLayout
-            Button button = new Button()
-            {
-                Text = "Continue",
-            };
-            stack.Children.Add(button);
-
-            // Установка обработчика события Clicked для кнопки
-            button.Clicked += Button_clickAsync;
-            */
         }
+
+        // Метод OnAppearing() вызывается при появлении страницы на экране.
+        // Вызывает метод Create_elements() для создания элементов.
         protected override void OnAppearing()
         {
             base.OnAppearing();
             Create_elements();
         }
 
-        //private async void Button_clickAsync (object sender, EventArgs e)
         private async void Create_elements()
         {
             try
@@ -118,7 +108,7 @@ namespace TestAndroidClear.Views
                     {
                         Span = 2
                     };
-
+                    RelativeLayout relativeLayout = new RelativeLayout();
                     // Создаем и настраиваем CollectionView для отображения продуктов
                     collectionView = new CollectionView
                     {
@@ -160,10 +150,10 @@ namespace TestAndroidClear.Views
                     StackLayout q1 = new StackLayout()
                     {
                         Children =
-                {
-                    headBTN,
-                    collectionView
-                }
+                        {
+                            headBTN,
+                            collectionView
+                        }
                     };
 
                     // Устанавливаем содержимое Frame
@@ -178,6 +168,57 @@ namespace TestAndroidClear.Views
             }
         }
 
+        private async void HeadBTNClick(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var layout = (StackLayout)button.Parent;
+            var collectionView = (CollectionView)layout.Children[1];
+
+            // Проверяем текущее состояние высоты Frame
+            var frame = (Frame)layout.Parent;
+            bool isCollapsed = frame.HeightRequest == 100;
+
+            // Задаем начальную и конечную высоту для анимации
+            double startHeight = frame.Height;
+
+            double endHeight = isCollapsed ? CalculateExpandedHeight(collectionView) : 100;
+
+            // Задаем продолжительность анимации
+            uint animationDuration = 250;
+
+            // Создаем анимацию
+            var animation = new Animation(v => frame.HeightRequest = v, startHeight, endHeight);
+            animation.Commit(this, "ExpandCollapseAnimation", 16, animationDuration, Easing.Linear);
+        }
+
+        // Метод для вычисления высоты CollectionView для развернутого состояния
+        private double CalculateExpandedHeight(CollectionView collectionView)
+        {
+            // Определяем количество элементов
+            int itemCount = 0;
+            if (collectionView.ItemsSource != null)
+            {
+                itemCount = collectionView.ItemsSource.Cast<object>().Count();
+            }
+
+            // Определяем количество столбцов (предположим, что у вас есть свойство Span в ItemsLayout)
+            int columnCount = 2;
+
+            // Рассчитываем количество строк
+            int rowCount = 10;
+
+            // Высота одной строки (можете использовать значения по умолчанию или получить его из элемента)
+            double rowHeight = 48; // Примерное значение, можно настроить
+
+            // Вычисляем высоту содержимого
+            double contentHeight = rowCount * rowHeight;
+
+            // Добавляем высоту заголовка категории и некоторый запас
+            double expandedHeight = contentHeight + 100; // Например, добавляем 50 пикселей для заголовка и отступов
+
+            return expandedHeight;
+        }
+
         private async void PRButtonClicked(object sender, EventArgs e)
         {
             var button = (Button)sender;
@@ -187,6 +228,7 @@ namespace TestAndroidClear.Views
             {
                 product.IsSelected = !product.IsSelected;
 
+                // Если продукт выбран, добавляем его в глобальный список продуктов.
                 if (product.IsSelected)
                 {
                     if (!GlobalProductList.Products.Contains(product.IngName))
@@ -194,46 +236,29 @@ namespace TestAndroidClear.Views
                         GlobalProductList.Products.Add(product.IngName);
                     }
                 }
+                // Если продукт не выбран, удаляем его из глобального списка продуктов.
                 else
                 {
                     GlobalProductList.Products.Remove(product.IngName);
                 }
+
+                // Обновляем цвета кнопок.
                 UpdateButtonColors(product.IngName);
             }
         }
         private void UpdateButtonColors(string productName)
         {
+            // Итерируем по дочерним элементам StackLayout.
             foreach (var product in stack.Children.OfType<Frame>()
+                // Находим вложенные CollectionView.
                 .SelectMany(frame => (frame.Content as StackLayout)?.Children.OfType<CollectionView>() ?? Enumerable.Empty<CollectionView>())
+                // Извлекаем продукты из ItemsSource CollectionView.
                 .SelectMany(view => view.ItemsSource.OfType<Products>())
+                // Отбираем продукты с именем, соответствующим переданному имени.
                 .Where(p => p.IngName == productName))
             {
+                // Устанавливаем состояние выбора продукта на основе его наличия в глобальном списке продуктов.
                 product.IsSelected = GlobalProductList.Products.Contains(productName);
-            }
-        }
-
-
-        private async void HeadBTNClick(object sender, EventArgs e)
-        {
-            // Получаем ссылку на кнопку, которая была нажата
-            var button = (Button)sender;
-
-            // Получаем ClassId кнопки, чтобы идентифицировать соответствующий Frame
-            var btnclass = button.ClassId;
-
-            // Находим Frame, соответствующий нажатой кнопке
-            var fr = stack.Children.FirstOrDefault(child => child is Frame && ((Frame)child).ClassId == btnclass) as Frame;
-
-            // Проверяем высоту Frame и выполняем соответствующее действие
-            if (fr.HeightRequest > 181)
-            {
-                // Если высота больше 181, вызываем метод сворачивания Frame
-                fr.HeightRequest = 600;
-            }
-            else if (fr.HeightRequest <= 180)
-            {
-                // Если высота меньше или равна 180, вызываем метод разворачивания Frame
-                fr.HeightRequest = 180;
             }
         }
     }

@@ -65,19 +65,27 @@ namespace TestAndroidClear.Views
                 // Создаем список категорий
                 List<Recipes> recipe = new List<Recipes>();
                 List<string> product = GlobalProductList.Products;
-                // Запрос к базе данных для получения списка категорий
-                string querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image " +
-                    "FROM Recipe r where ";
-                for (int i = 0; i < product.Count; i++)
+                string querryString;
+                if (product.Count != 0)
                 {
-                    if (i + 1 != product.Count)
+                    // Запрос к базе данных для получения списка категорий
+                    querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image " +
+                        "FROM Recipe r where ";
+                    for (int i = 0; i < product.Count; i++)
                     {
-                        querryString += "r.Product like '%' + '" + product[i] + "' + '%' or ";
+                        if (i + 1 != product.Count)
+                        {
+                            querryString += "r.Product like '%' + '" + product[i] + "' + '%' or ";
+                        }
+                        else
+                        {
+                            querryString += "r.Product like '%' + '" + product[i] + "' + '%'";
+                        }
                     }
-                    else
-                    {
-                        querryString += "r.Product like '%' + '" + product[i] + "' + '%'";
-                    }
+                }
+                else
+                {
+                    querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image FROM Recipe r";
                 }
                 SqlCommand command = new SqlCommand(querryString, sqlConnection);
                 SqlDataReader reader = command.ExecuteReader();

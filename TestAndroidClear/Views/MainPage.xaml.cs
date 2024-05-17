@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using TestAndroidClear.Models;
+using TestAndroidClear.Converters;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -30,7 +31,7 @@ namespace TestAndroidClear.Views
             }
             sqlConnection.Open();
 
-            Create_elements();
+            OnAppearing();
 
             /*
             // Создание кнопки "Continue" и добавление ее в StackLayout
@@ -44,12 +45,18 @@ namespace TestAndroidClear.Views
             button.Clicked += Button_clickAsync;
             */
         }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Create_elements();
+        }
 
         //private async void Button_clickAsync (object sender, EventArgs e)
         private async void Create_elements()
         {
             try
             {
+                stack.Children.Clear();
                 // Создаем список категорий
                 List<Categories> categories = new List<Categories>();
 
@@ -84,11 +91,13 @@ namespace TestAndroidClear.Views
                     // Читаем результаты запроса и добавляем продукты в список
                     while (reader1.Read())
                     {
-                        products.Add(new Products
+                        var product = new Products
                         {
                             ID = Convert.ToInt32(reader1["ID"]),
                             IngName = Convert.ToString(reader1["IngName"]),
-                        });
+                            IsSelected = GlobalProductList.Products.Contains(Convert.ToString(reader1["IngName"]))
+                        };
+                        products.Add(product);
                     }
                     reader1.Close();
 
@@ -105,39 +114,30 @@ namespace TestAndroidClear.Views
                     stack.Children.Add(frame);
 
                     // Создаем макет для элементов CollectionView
-                    var gridLayout = new GridItemsLayout(orientation: ItemsLayoutOrientation.Vertical);
-                    gridLayout.Span = 2;
+                    var gridLayout = new GridItemsLayout(orientation: ItemsLayoutOrientation.Vertical)
+                    {
+                        Span = 2
+                    };
 
                     // Создаем и настраиваем CollectionView для отображения продуктов
-                    collectionView = new CollectionView();
-                    collectionView.ItemsSource = products;
-                    collectionView.ItemsLayout = gridLayout;
-                    collectionView.ItemTemplate = new DataTemplate(() =>
+                    collectionView = new CollectionView
                     {
-                        // Создаем кнопку для отображения продукта
-                        Button PRButton = new Button();
-
-                        // Привязываем текст кнопки к свойству IngName объекта Products
-                        PRButton.SetBinding(Button.TextProperty, "IngName");
-                        PRButton.SetBinding(Button.ClassIdProperty, "IngName");
-                        PRButton.Clicked += PRButtonClicked;
-                        PRButton.FontSize = 12;
-
-                        // Устанавливаем начальный цвет кнопки в зависимости от её состояния в глобальном списке
-                        PRButton.BindingContextChanged += (s, e) =>
+                        ItemsSource = products,
+                        ItemsLayout = gridLayout,
+                        ItemTemplate = new DataTemplate(() =>
                         {
-                            if (PRButton.BindingContext is Products product && GlobalButtonState.ButtonStates.ContainsKey(product.IngName))
-                            {
-                                PRButton.BackgroundColor = GlobalButtonState.ButtonStates[product.IngName] ? Color.Accent : Color.Cyan;
-                            }
-                            else
-                            {
-                                PRButton.BackgroundColor = Color.Cyan;
-                            }
-                        };
+                            // Создаем кнопку для отображения продукта
+                            Button PRButton = new Button();
 
-                        return PRButton;
-                    });
+                            // Привязываем текст кнопки к свойству IngName объекта Products
+                            PRButton.SetBinding(Button.TextProperty, "IngName");
+                            PRButton.SetBinding(Button.ClassIdProperty, "IngName");
+                            PRButton.SetBinding(Button.BackgroundColorProperty, new Binding("IsSelected", converter: new BoolToColorConverter()));
+                            PRButton.Clicked += PRButtonClicked;
+                            PRButton.FontSize = 12;
+                            return PRButton;
+                        })
+                    };
 
                     // Получаем название категории для использования в заголовке кнопки
                     string header = Convert.ToString(categories[i].CategoryTBName);
@@ -160,10 +160,10 @@ namespace TestAndroidClear.Views
                     StackLayout q1 = new StackLayout()
                     {
                         Children =
-                        {
-                            headBTN,
-                            collectionView
-                        }
+                {
+                    headBTN,
+                    collectionView
+                }
                     };
 
                     // Устанавливаем содержимое Frame
@@ -181,20 +181,37 @@ namespace TestAndroidClear.Views
         private async void PRButtonClicked(object sender, EventArgs e)
         {
             var button = (Button)sender;
+            var product = (Products)button.BindingContext;
 
-            // Получаем ClassId кнопки, чтобы идентифицировать соответствующий Frame
-            var productName = button.Text;
-            if (GlobalProductList.Products.Contains(productName))
+            if (product != null)
             {
-                GlobalProductList.Products.Remove(productName);
-                button.BackgroundColor = Color.Cyan;
-            }
-            else
-            {
-                GlobalProductList.Products.Add(productName);
-                button.BackgroundColor = Color.Accent;
+                product.IsSelected = !product.IsSelected;
+
+                if (product.IsSelected)
+                {
+                    if (!GlobalProductList.Products.Contains(product.IngName))
+                    {
+                        GlobalProductList.Products.Add(product.IngName);
+                    }
+                }
+                else
+                {
+                    GlobalProductList.Products.Remove(product.IngName);
+                }
+                UpdateButtonColors(product.IngName);
             }
         }
+        private void UpdateButtonColors(string productName)
+        {
+            foreach (var product in stack.Children.OfType<Frame>()
+                .SelectMany(frame => (frame.Content as StackLayout)?.Children.OfType<CollectionView>() ?? Enumerable.Empty<CollectionView>())
+                .SelectMany(view => view.ItemsSource.OfType<Products>())
+                .Where(p => p.IngName == productName))
+            {
+                product.IsSelected = GlobalProductList.Products.Contains(productName);
+            }
+        }
+
 
         private async void HeadBTNClick(object sender, EventArgs e)
         {

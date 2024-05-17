@@ -36,6 +36,9 @@
                             <Button x:Name="ChangeMail" BackgroundColor="White" CornerRadius="16" Text="Сменить почту" FontSize="Body" FontAttributes="Bold" Clicked="ChangeMail_Clicked"/>
                         </Frame>
                         <Frame CornerRadius="16" Padding="0">
+                            <Button x:Name="ClearFavorite" BackgroundColor="White" CornerRadius="16" Text="Clear Favorite" FontSize="Body" FontAttributes="Bold" Clicked="Clear_Clicked"/>
+                        </Frame>
+                        <Frame CornerRadius="16" Padding="0">
                             <Button x:Name="About" BackgroundColor="White" CornerRadius="16" Text="О приложении" FontSize="Body" FontAttributes="Bold" Clicked="About_Clicked"/>
                         </Frame>
                         <Frame x:Name="InfoCard" IsVisible="false" CornerRadius="16" Margin="0,0,0,60">

@@ -5,8 +5,9 @@ using System.Text;
 
 namespace TestAndroidClear.Models
 {
-    public class Recipes
+    public class SavedRecipes
     {
+        [PrimaryKey, AutoIncrement]
         public int RecipeID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

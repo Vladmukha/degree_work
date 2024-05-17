@@ -4,16 +4,18 @@ using System.Data.SqlClient;
 using System.IO;
 using TestAndroidClear.Models;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Forms.Xaml;
 
 namespace TestAndroidClear.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class RecipePage : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class RecipePage : ContentPage
+    {
 
         //Вспомогательные
         SqlConnection sqlConnection;
+        RecipeDatabase recipeDatabase = new RecipeDatabase();
 
         //Контейнеры 
         StackLayout RSETitleHeart;
@@ -23,14 +25,14 @@ namespace TestAndroidClear.Views
         Frame RFrame;
 
         //Контейнеры инфо-и
-        ImageButton Heart;
+        Xamarin.Forms.ImageButton Heart;
         Label RTitle;
         Label RTime;
         Label RProd;
         Image RImg;
         public RecipePage ()
-		{
-			InitializeComponent ();
+        {
+            InitializeComponent();
             DatabaseConnection dbConnection = new DatabaseConnection();
             if (dbConnection.OpenConnection())
             {
@@ -107,7 +109,8 @@ namespace TestAndroidClear.Views
                 // Обработка каждого рецепта
                 for (int i = 0; i < recipe.Count; i++)
                 {
-                    Heart = new ImageButton() 
+                    
+                    Heart = new Xamarin.Forms.ImageButton()
                     {
                         HorizontalOptions = LayoutOptions.EndAndExpand,
                         VerticalOptions = LayoutOptions.Center,
@@ -116,22 +119,24 @@ namespace TestAndroidClear.Views
                         WidthRequest = 26,
                         BackgroundColor = Color.Red
                     };
-                    RTitle = new Label() 
+                    Heart.BindingContext = recipe[i];
+                    Heart.Clicked += heart_BtnClick;
+                    RTitle = new Label()
                     {
                         FontSize = Device.GetNamedSize(NamedSize.Body, typeof(Label)),
                         TextColor = Color.Black,
                     };
-                    RTime = new Label() 
+                    RTime = new Label()
                     {
                         FontSize = 12
                     };
-                    RProd = new Label() 
-                    { 
+                    RProd = new Label()
+                    {
                         LineBreakMode = LineBreakMode.TailTruncation,
                         MaxLines = 1,
                         FontSize = 12
                     };
-                    RImg = new Image() 
+                    RImg = new Image()
                     {
                         Aspect = Aspect.AspectFill
                     };
@@ -192,7 +197,7 @@ namespace TestAndroidClear.Views
                     RFrame = new Frame()
                     {
                         HeightRequest = 100,
-                        Padding = new Thickness(12,10),
+                        Padding = new Thickness(12, 10),
                         CornerRadius = 16,
                         Content = RSEntry
                     };
@@ -204,7 +209,47 @@ namespace TestAndroidClear.Views
                 // В случае исключения выводим сообщение об ошибке
                 await App.Current.MainPage.DisplayAlert("Alert", ex.Message, "Ok");
                 throw;
-            } 
+            }
+        }
+
+        private async void heart_BtnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                // Получаем рецепт, соответствующий кнопке, по ее контексту
+                var button = sender as Xamarin.Forms.ImageButton;
+                var recipe = button.BindingContext as Recipes;
+
+                var savedRecipe = new SavedRecipes
+                {
+                    RecipeID = recipe.RecipeID,
+                    Title = recipe.Title,
+                    Description = recipe.Description,
+                    Product = recipe.Product,
+                    URL = recipe.URL,
+                    MaxReadyTime = recipe.MaxReadyTime,
+                    Image = recipe.Image
+                };
+
+                // Проверяем, сохранен ли рецепт
+                bool isSaved = await recipeDatabase.IsRecipeSavedAsync(savedRecipe);
+
+                if (isSaved)
+                {
+                    // Рецепт уже сохранен, удаляем его
+                    await recipeDatabase.DeleteRecipeAsync(savedRecipe);
+                }
+                else
+                {
+                    // Рецепт не сохранен, сохраняем его
+                    await recipeDatabase.SaveRecipeAsync(savedRecipe);
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки выводим сообщение об ошибке
+                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            }
         }
     }
 }

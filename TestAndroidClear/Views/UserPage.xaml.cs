@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using TestAndroidClear.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,7 +12,9 @@ namespace TestAndroidClear.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class UserPage : ContentPage
 	{
-		public UserPage ()
+        RecipeDatabase recipeDatabase = new RecipeDatabase();
+
+        public UserPage ()
 		{
 			InitializeComponent ();
 		}
@@ -54,6 +56,11 @@ namespace TestAndroidClear.Views
         private void Exit_Clicked(object sender, EventArgs e)
         {
 
+        }
+
+        private async void Clear_Clicked(object sender, EventArgs e)
+        {
+            await recipeDatabase.DeleteAllRecipesAsync();
         }
     }
 }

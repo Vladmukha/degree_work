@@ -4,52 +4,60 @@
              Title="Польователь"
              x:Class="TestAndroidClear.Views.UserPage">
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout ClassId="Main" Padding="20">
-                <Frame CornerRadius="16">
-                    <FlexLayout Wrap="NoWrap" Direction="Column" Padding="4,-5,0,4">
-                        <StackLayout Orientation="Vertical">
-                            <Label Text="ФИО" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Text="Enter FSL Name" FontSize="Default" FontAttributes="Bold"/>
-                            <Line BackgroundColor="#000000" StrokeLineCap="Round" />
-                        </StackLayout>
-                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*" Padding="0">
-                            <Label Text="Login" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
-                            <Label x:Name="login" Grid.Column="1" Text="EnterLogin" FontAttributes="Bold" FontSize="Body"/>
-                            <Label Grid.Row="1" Text="Password" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Grid.Row="1" Grid.Column="1" Text="••••••••••" FontSize="Body" FontAttributes="Bold"/>
-                            <Label Grid.Row="2" Text="Mail" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
-                            <Label Grid.Row="2" Grid.Column="1" Text="EnterMail" FontSize="Body" FontAttributes="Bold"/>
-                        </Grid>
-                    </FlexLayout>
-                </Frame>
-                <StackLayout Spacing="13" Margin="0,10,0,0">
-                    <Frame CornerRadius="16" Padding="0">
-                        <Button x:Name="ChangeLogin" BackgroundColor="White" CornerRadius="16" Text="Сменить логин" FontSize="Body" FontAttributes="Bold" Clicked="ChangeLogin_Clicked"/>
+        <RelativeLayout>
+            <ScrollView RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
+                <StackLayout ClassId="Main" Padding="20">
+                    <Frame CornerRadius="16">
+                        <FlexLayout Wrap="NoWrap" Direction="Column" Padding="4,-5,0,4">
+                            <StackLayout Orientation="Vertical">
+                                <Label Text="ФИО" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Text="Enter FSL Name" FontSize="Default" FontAttributes="Bold"/>
+                                <Line BackgroundColor="#000000" StrokeLineCap="Round" />
+                            </StackLayout>
+                            <Grid ColumnDefinitions="*,*,*" RowDefinitions="*,*" Padding="0">
+                                <Label Text="Login" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
+                                <Label x:Name="login" Grid.Column="1" Text="EnterLogin" FontAttributes="Bold" FontSize="Body"/>
+                                <Label Grid.Row="1" Text="Password" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Grid.Row="1" Grid.Column="1" Text="••••••••••" FontSize="Body" FontAttributes="Bold"/>
+                                <Label Grid.Row="2" Text="Mail" FontSize="Body" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Grid.Row="2" Grid.Column="1" Text="EnterMail" FontSize="Body" FontAttributes="Bold"/>
+                            </Grid>
+                        </FlexLayout>
                     </Frame>
-                    <Frame CornerRadius="16" Padding="0">
-                        <Button x:Name="ChangePass" BackgroundColor="White" CornerRadius="16" Text="Сменить пароль" FontSize="Body" FontAttributes="Bold" Clicked="ChangePass_Clicked"/>
-                    </Frame>
-                    <Frame CornerRadius="16" Padding="0">
-                        <Button x:Name="ChangeMail" BackgroundColor="White" CornerRadius="16" Text="Сменить почту" FontSize="Body" FontAttributes="Bold" Clicked="ChangeMail_Clicked"/>
-                    </Frame>
-                    <Frame CornerRadius="16" Padding="0">
-                        <Button x:Name="About" BackgroundColor="White" CornerRadius="16" Text="О приложении" FontSize="Body" FontAttributes="Bold" Clicked="About_Clicked"/>
-                    </Frame>
-                    <Frame x:Name="InfoCard" IsVisible="false" CornerRadius="16" Margin="0,0,0,10">
-                        <StackLayout>
-                            <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто вам приходилось долго искать идеальный рецепт только чтобы обнаружить, что не хватает одного или нескольких ингредиентов?"/>
-                            <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто вы открываете холодильник в раздумьях, что бы сегодня приготовить?"/>
-                            <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто приходится выбрасывать еду на помойку только потому, что непонятно, с чем ее едят или как ее приготовить?"/>
-                            <Label FontAttributes="Bold" FontSize="Medium" Text="В отличие от других кулинарных проектов-поисковиков рецептов по ингредиентам, Recipe From The Fridge показывает только те рецепты, которые реально можно приготовить из того, что у вас есть."/>
-                            <Label FontAttributes="Bold" FontSize="Medium" Text="Просто откройте холодильник, нажмите кнопку микрофона и начните перечислять все, что у вас есть. Мобильная версия автоматически добавит весь список в Ингредиенты, что позволит вам быстро и легко находить новые рецепты!"/>
-                        </StackLayout>
-                    </Frame>
-                    <Frame CornerRadius="16" Padding="0" HorizontalOptions="Center" VerticalOptions="End">
-                        <Button x:Name="Exit" BackgroundColor="White" CornerRadius="16" Text="Выйти" FontSize="Body" FontAttributes="Bold" Clicked="Exit_Clicked"/>
-                    </Frame>
+                    <StackLayout Spacing="13" Margin="0,10,0,0">
+                        <Frame CornerRadius="16" Padding="0">
+                            <Button x:Name="ChangeLogin" BackgroundColor="White" CornerRadius="16" Text="Сменить логин" FontSize="Body" FontAttributes="Bold" Clicked="ChangeLogin_Clicked"/>
+                        </Frame>
+                        <Frame CornerRadius="16" Padding="0">
+                            <Button x:Name="ChangePass" BackgroundColor="White" CornerRadius="16" Text="Сменить пароль" FontSize="Body" FontAttributes="Bold" Clicked="ChangePass_Clicked"/>
+                        </Frame>
+                        <Frame CornerRadius="16" Padding="0">
+                            <Button x:Name="ChangeMail" BackgroundColor="White" CornerRadius="16" Text="Сменить почту" FontSize="Body" FontAttributes="Bold" Clicked="ChangeMail_Clicked"/>
+                        </Frame>
+                        <Frame CornerRadius="16" Padding="0">
+                            <Button x:Name="About" BackgroundColor="White" CornerRadius="16" Text="О приложении" FontSize="Body" FontAttributes="Bold" Clicked="About_Clicked"/>
+                        </Frame>
+                        <Frame x:Name="InfoCard" IsVisible="false" CornerRadius="16" Margin="0,0,0,60">
+                            <StackLayout>
+                                <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто вам приходилось долго искать идеальный рецепт только чтобы обнаружить, что не хватает одного или нескольких ингредиентов?"/>
+                                <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто вы открываете холодильник в раздумьях, что бы сегодня приготовить?"/>
+                                <Label FontAttributes="Bold" FontSize="Medium" Text="Как часто приходится выбрасывать еду на помойку только потому, что непонятно, с чем ее едят или как ее приготовить?"/>
+                                <Label FontAttributes="Bold" FontSize="Medium" Text="В отличие от других кулинарных проектов-поисковиков рецептов по ингредиентам, Recipe From The Fridge показывает только те рецепты, которые реально можно приготовить из того, что у вас есть."/>
+                                <Label FontAttributes="Bold" FontSize="Medium" Text="Просто откройте холодильник, нажмите кнопку микрофона и начните перечислять все, что у вас есть. Мобильная версия автоматически добавит весь список в Ингредиенты, что позволит вам быстро и легко находить новые рецепты!"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-        </ScrollView>
+            </ScrollView>
+            <Frame HasShadow="True" CornerRadius="16" Padding="0"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.72}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.91}">
+                <Button x:Name="Exit" BackgroundColor="White"  Text="Выйти" 
+        FontSize="Body" FontAttributes="Bold" Clicked="Exit_Clicked"/>
+
+            </Frame>
+            
+        </RelativeLayout>
     </ContentPage.Content>
 </ContentPage>

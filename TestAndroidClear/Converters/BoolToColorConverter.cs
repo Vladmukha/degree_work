@@ -12,9 +12,9 @@ namespace TestAndroidClear.Converters
         {
             if (value is bool isSelected)
             {
-                return isSelected ? Color.Accent : Color.Cyan;
+                return isSelected ? Color.Silver : Color.WhiteSmoke;
             }
-            return Color.Cyan;
+            return Color.WhiteSmoke;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -68,7 +68,7 @@ namespace TestAndroidClear.Views
                 reader.Close();
 
                 // Обработка каждой категории
-                for (int i = 0; i < categories.Count; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     // Создаем список продуктов для текущей категории
                     List<Products> products = new List<Products>();
@@ -176,12 +176,12 @@ namespace TestAndroidClear.Views
 
             // Проверяем текущее состояние высоты Frame
             var frame = (Frame)layout.Parent;
-            bool isCollapsed = frame.HeightRequest == 100;
+            bool isCollapsed = frame.HeightRequest == 140;
 
             // Задаем начальную и конечную высоту для анимации
             double startHeight = frame.Height;
 
-            double endHeight = isCollapsed ? CalculateExpandedHeight(collectionView) : 100;
+            double endHeight = isCollapsed ? CalculateExpandedHeight(collectionView) : 140;
 
             // Задаем продолжительность анимации
             uint animationDuration = 250;

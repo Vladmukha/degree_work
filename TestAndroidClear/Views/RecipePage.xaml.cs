@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.IO;
 using TestAndroidClear.Models;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Forms.Xaml;
 
 namespace TestAndroidClear.Views
@@ -40,16 +39,6 @@ namespace TestAndroidClear.Views
                 sqlConnection = dbConnection.GetConnection();
             }
             sqlConnection.Open();
-            /*
-            // Создание кнопки "Continue" и добавление ее в StackLayout
-            Button button = new Button()
-            {
-                Text = "Continue",
-            };
-            Re.Children.Add(button);
-
-            // Установка обработчика события Clicked для кнопки
-            button.Clicked += Button_clickAsync;*/
         }
 
         protected override void OnAppearing()
@@ -71,19 +60,32 @@ namespace TestAndroidClear.Views
                 if (product.Count != 0)
                 {
                     // Запрос к базе данных для получения списка категорий
-                    querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image " +
-                        "FROM Recipe r where ";
+                    querryString = "SELECT r.ID, r.Title, r.Description, r.Product, r.Url, r.MaxReadyTime, r.Image, (";
                     for (int i = 0; i < product.Count; i++)
                     {
                         if (i + 1 != product.Count)
                         {
-                            querryString += "r.Product like '%' + '" + product[i] + "' + '%' or ";
+                            querryString += "CASE WHEN r.Product LIKE '%" + product[i] + "%' THEN 1 ELSE 0 END + ";
                         }
                         else
                         {
-                            querryString += "r.Product like '%' + '" + product[i] + "' + '%'";
+                            querryString += "CASE WHEN r.Product LIKE '%" + product[i] + "%' THEN 1 ELSE 0 END) AS MatchCount ";
                         }
                     }
+                    querryString += "FROM Recipe r WHERE ";
+                    for (int i = 0; i < product.Count; i++)
+                    {
+                        if (i + 1 != product.Count)
+                        {
+                            querryString += "r.Product LIKE '%" + product[i] + "%' OR ";
+                        }
+                        else
+                        {
+                            querryString += "r.Product LIKE '%" + product[i] + "%' ";
+                        }
+                    }
+                    querryString += "ORDER BY MatchCount DESC, r.ID;";
+                    querryString += "";
                 }
                 else
                 {
@@ -149,9 +151,6 @@ namespace TestAndroidClear.Views
                     RProd.Text = Convert.ToString(r.Product);
                     RTime.Text = Convert.ToString(r.MaxReadyTime);
                     RTitle.Text = Convert.ToString(r.Title);
-                    //RTitle.SetBinding(Label.TextProperty, r.Title);
-                    //RProd.SetBinding(Label.TextProperty, r.Product);
-                    //RTime.SetBinding(Label.TextProperty, Convert.ToString(r.MaxReadyTime));
 
                     RSETitleHeart = new StackLayout()
                     {
@@ -178,8 +177,7 @@ namespace TestAndroidClear.Views
                     {
                         CornerRadius = 8,
                         Padding = 0,
-                        WidthRequest = 160,
-                        HeightRequest = 95,
+                        HeightRequest = 80,
                         VerticalOptions = LayoutOptions.Center,
                         Content = RImg
                     };

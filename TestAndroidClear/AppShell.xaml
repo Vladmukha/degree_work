@@ -2,6 +2,7 @@
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:TestAndroidClear.Views"
+       xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
        x:Class="TestAndroidClear.AppShell">
     <Shell.Resources>
         <ResourceDictionary>
@@ -21,9 +22,30 @@
         </ResourceDictionary>
     </Shell.Resources>
     <TabBar>
-        <ShellContent Title="1" Route="Страница продуктов" ContentTemplate="{DataTemplate local:MainPage}"/>
-        <ShellContent Title="2" Route="Страница рецептов" ContentTemplate="{DataTemplate local:RecipePage}"/>
-        <ShellContent Title="3" Route="Страница пользователей" ContentTemplate="{DataTemplate local:RLikePage}"/>
-        <ShellContent Title="4" Route="Страница пользователей" ContentTemplate="{DataTemplate local:UserPage}"/>
+        <Tab Icon="Ingr.png">
+            <ShellContent Route="Страница продуктов" ContentTemplate="{DataTemplate local:MainPage}">
+                <ShellContent.Icon>
+                    <FontImageSource  Glyph="&#xf015;" FontFamily="FontAwesome" Color="Black" />
+                </ShellContent.Icon>
+            </ShellContent>
+        </Tab>
+        <Tab Icon="Recipes.png">
+            <ShellContent Route="Страница рецептов" ContentTemplate="{DataTemplate local:RecipePage}">
+                <ShellContent.Icon>
+                    <FontImageSource  Glyph="&#xf015;" FontFamily="FontAwesome" Color="Black" />
+                </ShellContent.Icon>
+            </ShellContent>
+        </Tab>
+        <Tab Icon="Liked.png">
+            <ShellContent Route="Страница пользователей" ContentTemplate="{DataTemplate local:RLikePage}">
+            </ShellContent>
+        </Tab>
+        <Tab Icon="User.png">
+            <ShellContent Route="Страница пользователей" ContentTemplate="{DataTemplate local:UserPage}">
+                <ShellContent.Icon>
+                    <FontImageSource  Glyph="&#xf015;" FontFamily="FontAwesome" Color="Black" />
+                </ShellContent.Icon>
+            </ShellContent>
+        </Tab>
     </TabBar>
 </Shell>

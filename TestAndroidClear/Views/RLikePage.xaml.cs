@@ -12,6 +12,7 @@ namespace TestAndroidClear.Views
     {
         //Вспомогательные
         RecipeDatabase recipeDatabase = new RecipeDatabase();
+        int k = 1;
 
         //Контейнеры 
         StackLayout RSETitleHeart;
@@ -19,6 +20,7 @@ namespace TestAndroidClear.Views
         Frame RFImage;
         StackLayout RSEntry;
         Frame RFrame;
+        Frame RFrame1;
 
         //Контейнеры инфо-и
         ImageButton Heart;
@@ -34,6 +36,7 @@ namespace TestAndroidClear.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            Rl.Children.Clear();
             LoadSaved();
         }
 
@@ -44,35 +47,34 @@ namespace TestAndroidClear.Views
                 // Получаем сохраненные рецепты из базы данных
                 List<SavedRecipes> savedRecipes = await recipeDatabase.GetSavedRecipesAsync();
                 // Очищаем существующие элементы интерфейса
-                Rl.Children.Clear();
                 if (savedRecipes.Count == 0)
                 {
-                    Rl.VerticalOptions = LayoutOptions.CenterAndExpand;
                     Label label = new Label()
                     {
                         Text = "У вас нет сохраненных рецептов!",
                         FontAttributes = FontAttributes.Bold,
-                        FontSize = 24,
+                        FontSize = 20,
                         TextColor = Color.Black,
                         VerticalOptions = LayoutOptions.CenterAndExpand,
                         HorizontalOptions = LayoutOptions.CenterAndExpand,
                         HorizontalTextAlignment = TextAlignment.Center
                     };
-                    RFrame = new Frame()
+                    RFrame1 = new Frame()
                     {
                         HeightRequest = 100,
                         Padding = new Thickness(12, 10),
                         CornerRadius = 16,
                         Content = label,
-                        VerticalOptions = LayoutOptions.CenterAndExpand
+                        VerticalOptions = LayoutOptions.Start
                     };
-                    Rl.Children.Add(RFrame);
+                    Rl.Children.Add(RFrame1);
                 }
                 else
                 {
                     // Обрабатываем каждый сохраненный рецепт
                     foreach (var recipe in savedRecipes)
                     {
+                        Rl.VerticalOptions = LayoutOptions.Start;
                         Heart = new ImageButton()
                         {
                             HorizontalOptions = LayoutOptions.EndAndExpand,
@@ -143,8 +145,7 @@ namespace TestAndroidClear.Views
                         {
                             CornerRadius = 8,
                             Padding = 0,
-                            WidthRequest = 160,
-                            HeightRequest = 95,
+                            HeightRequest = 80,
                             VerticalOptions = LayoutOptions.Center,
                             Content = RImg
                         };
@@ -167,7 +168,6 @@ namespace TestAndroidClear.Views
                             Content = RSEntry,
                             VerticalOptions = LayoutOptions.Start
                         };
-                        Rl.VerticalOptions = LayoutOptions.Start;
                         Rl.Children.Add(RFrame);
                     }
                 }
@@ -192,11 +192,6 @@ namespace TestAndroidClear.Views
                 {
                     // Рецепт уже сохранен, удаляем его
                     await recipeDatabase.DeleteRecipeAsync(savedRecipe);
-                }
-                else
-                {
-                    // Рецепт не сохранен, сохраняем его
-                    await recipeDatabase.SaveRecipeAsync(savedRecipe);
                 }
                 OnAppearing();
             }
